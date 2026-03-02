@@ -1,13 +1,48 @@
-# Visual Studio 临时文件夹
+# --- HarmonyOS / DevEco Studio ---
+.gradle
+.idea
+build/
+ohos/
+entry/build/
+entry/.cxx/
+node_modules/
+oh_modules/
+*.hap
+*.har
+*.hsp
+local.properties
+.hvigor/
+hvigorfile.js.map
+
+# --- C++ / GLSL / 编译产物 ---
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.a
+*.lib
+*.out
+*.app
 .vs/
-
-# 编译输出
-[Dd]ebug/
-[Rr]elease/
 bin/
-obj/
+gen/
+out/
 
-# 其他临时文件
-*.user
+# --- 操作系统冗余 ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- 调试与日志 ---
+*.log
+*.tmp
+*.swp
+.error/
+
+# --- 编辑器 / IDE ---
 *.suo
-*.pdb
+*.user
+*.userosscache
+*.sln.docstates
+.vscode/
