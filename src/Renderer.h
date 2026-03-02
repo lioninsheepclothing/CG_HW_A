@@ -3,6 +3,7 @@
 #include <string>
 #include <glm/glm.hpp>
 #include "Mesh.h"
+#include "SceneTree.h"
 
 struct RenderCanvas {
     int pixelWidth;
@@ -26,9 +27,14 @@ private:
     void rasterizeTriangle(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, const glm::vec3& color);
     glm::vec3 computeWeights(const glm::vec2& pA, const glm::vec2& pB, const glm::vec2& pC, const glm::vec2& pixelP);
 
+    glm::vec3 transformToScreen(const glm::vec3& v);
+    bool isAABBVisible(const BoundingBox& bbox);
+    void traverseNode(int nodeID, const std::vector<SpatialZone>& nodes, const Mesh& targetMesh);
+
 public:
     SoftwareRenderer(int width, int height);
     void setupCamera(const glm::vec3& cameraPos, const glm::vec3& lookTarget, float fovY);
     void renderMesh_Baseline(const Mesh& targetMesh);
     bool exportToImage(const std::string& outputPath);
+    void renderMesh_Accelerated(const Mesh& targetMesh, const SceneTreeBuilder& bvhTree);
 };

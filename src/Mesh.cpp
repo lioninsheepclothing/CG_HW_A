@@ -15,32 +15,40 @@ bool Mesh::LoadFromOBJ(const std::string& filepath) {
     if (!err.empty()) std::cerr << "OBJ Error: " << err << std::endl;
     if (!ret) return false;
 
-    // 解析顶点位置和法线
+    // 1. 初始化顶点位置
     for (size_t i = 0; i < attrib.vertices.size(); i += 3) {
         Vertex v;
         v.position = glm::vec3(attrib.vertices[i], attrib.vertices[i + 1], attrib.vertices[i + 2]);
+        v.normal = glm::vec3(0.0f, 1.0f, 0.0f); // 默认向上
         bbox.expand(v.position);
-
-        // 防止越界
-        if (!attrib.normals.empty() && (i + 2) < attrib.normals.size()) {
-            v.normal = glm::vec3(attrib.normals[i], attrib.normals[i + 1], attrib.normals[i + 2]);
-        }
-        else {
-            v.normal = glm::vec3(0.0f, 1.0f, 0.0f);
-        }
         vertices.push_back(v);
     }
 
-    // 解析面片索引
+    // 2. 解析面片索引，并绑定正确的法线
     for (size_t s = 0; s < shapes.size(); s++) {
         size_t index_offset = 0;
         for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
             int fv = shapes[s].mesh.num_face_vertices[f];
             if (fv == 3) {
                 Triangle tri;
-                tri.v0 = shapes[s].mesh.indices[index_offset + 0].vertex_index;
-                tri.v1 = shapes[s].mesh.indices[index_offset + 1].vertex_index;
-                tri.v2 = shapes[s].mesh.indices[index_offset + 2].vertex_index;
+                for (int k = 0; k < 3; ++k) {
+                    auto idx = shapes[s].mesh.indices[index_offset + k];
+                    int v_idx = idx.vertex_index;
+                    int n_idx = idx.normal_index;
+
+                    // 根据 normal_index 覆盖正确的法线数据
+                    if (n_idx >= 0 && n_idx * 3 + 2 < attrib.normals.size()) {
+                        vertices[v_idx].normal = glm::vec3(
+                            attrib.normals[3 * n_idx + 0],
+                            attrib.normals[3 * n_idx + 1],
+                            attrib.normals[3 * n_idx + 2]
+                        );
+                    }
+
+                    if (k == 0) tri.v0 = v_idx;
+                    if (k == 1) tri.v1 = v_idx;
+                    if (k == 2) tri.v2 = v_idx;
+                }
                 triangles.push_back(tri);
             }
             index_offset += fv;

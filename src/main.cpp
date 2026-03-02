@@ -35,10 +35,11 @@ int main(int argc, char** argv) {
     glm::vec3 lookAt(0.0f, 0.0f, 0.0f);
     engine.setupCamera(camPos, lookAt, 45.0f);
 
-    std::cout << "Rendering Baseline Z-Buffer..." << std::endl;
+    std::cout << "Rendering Z-Buffer..." << std::endl;
 
     // 4. 执行基准软光栅化与 Z-buffer 测试
-    engine.renderMesh_Baseline(mesh);
+    /*engine.renderMesh_Baseline(mesh);*/
+    engine.renderMesh_Accelerated(mesh, bvhTree);
 
     // 5. 输出结果
     if (engine.exportToImage(outImagePath)) {
