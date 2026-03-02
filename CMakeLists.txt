@@ -9,7 +9,7 @@ include_directories(src)
 
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 
-add_executable(CG_ZBuffer ${SOURCES} "src/Renderer.h" "src/Renderer.cpp")
+add_executable(CG_ZBuffer ${SOURCES} "src/Renderer.h" "src/Renderer.cpp" "src/SceneTree.h" "src/SceneTree.cpp")
 
 target_compile_definitions(CG_ZBuffer PRIVATE PROJECT_ROOT="${CMAKE_SOURCE_DIR}")
 

@@ -2,6 +2,7 @@
 #include <string>
 #include "Mesh.h"
 #include "Renderer.h"
+#include "SceneTree.h"
 
 #ifndef PROJECT_ROOT
 #define PROJECT_ROOT "."
@@ -21,6 +22,9 @@ int main(int argc, char** argv) {
         return -1;
     }
     std::cout << "Model Loaded. Faces to process: " << mesh.triangles.size() << std::endl;
+
+    SceneTreeBuilder bvhTree;
+    bvhTree.buildTree(mesh);
 
     // 2. 初始化渲染引擎 (800x800 画布)
     SoftwareRenderer engine(800, 800);
