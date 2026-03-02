@@ -1,0 +1,5 @@
+# ninja log v6
+4	751	7941354416171435	CMakeFiles/CG_ZBuffer.dir/src/main.cpp.obj	61de6f5b4646aa40
+10	823	7941354416231438	CMakeFiles/CG_ZBuffer.dir/src/Mesh.cpp.obj	539d9518a7aaa05b
+16	1022	7941354416301519	CMakeFiles/CG_ZBuffer.dir/src/stb_impl.cpp.obj	5d354d3cdfe85752
+1022	1978	7941354426351543	CG_ZBuffer.exe	a6587fbe6ef3bacf

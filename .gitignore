@@ -1,0 +1,13 @@
+# Visual Studio 临时文件夹
+.vs/
+
+# 编译输出
+[Dd]ebug/
+[Rr]elease/
+bin/
+obj/
+
+# 其他临时文件
+*.user
+*.suo
+*.pdb
