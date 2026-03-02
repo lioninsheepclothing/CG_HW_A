@@ -1,46 +1,47 @@
 #include <iostream>
-#include <vector>
+#include <string>
 #include "Mesh.h"
+#include "Renderer.h"
 
-#include "stb_image_write.h"
-
-void TestImageOutput() {
-    const int width = 800;
-    const int height = 600;
-    const int channels = 3;
-
-    std::vector<unsigned char> pixels(width * height * channels);
-    for (int y = 0; y < height; ++y) {
-        for (int x = 0; x < width; ++x) {
-            int index = (y * width + x) * channels;
-            pixels[index + 0] = 50;
-            pixels[index + 1] = 100;
-            pixels[index + 2] = 150;
-        }
-    }
-
-    if (stbi_write_png("test_output.png", width, height, channels, pixels.data(), width * channels)) {
-        std::cout << "Successfully wrote test_output.png" << std::endl;
-    }
-    else {
-        std::cerr << "Failed to write image." << std::endl;
-    }
-}
+#ifndef PROJECT_ROOT
+#define PROJECT_ROOT "."
+#endif
 
 int main(int argc, char** argv) {
-    std::cout << "--- CG Homework: Hierarchical Z-Buffer ---" << std::endl;
+    std::cout << "--- CG Homework Phase 2: Standard Z-Buffer Baseline ---" << std::endl;
 
-    TestImageOutput();
+    std::string rootPath(PROJECT_ROOT);
+    std::string modelPath = (argc > 1) ? argv[1] : rootPath + "/models/cheburashka.obj";
+    std::string outImagePath = rootPath + "/phase2_baseline.png";
 
+    // 1. 加载模型
     Mesh mesh;
-    // 默认命令行
-    std::string modelPath = (argc > 1) ? argv[1] : "models/cheburashka.obj";
+    if (!mesh.LoadFromOBJ(modelPath)) {
+        std::cerr << "Failed to load model: " << modelPath << std::endl;
+        return -1;
+    }
+    std::cout << "Model Loaded. Faces to process: " << mesh.triangles.size() << std::endl;
 
-    if (mesh.LoadFromOBJ(modelPath)) {
-        std::cout << "Phase 1 Data Pipeline setup complete!" << std::endl;
+    // 2. 初始化渲染引擎 (800x800 画布)
+    SoftwareRenderer engine(800, 800);
+
+    // 3. 设置相机
+    // 将相机放在模型正前方的 Z 轴上。你可以根据模型的包围盒(bbox)来调整这里的 (0,0,5)
+    glm::vec3 camPos(0.0f, 0.0f, 3.0f);
+    glm::vec3 lookAt(0.0f, 0.0f, 0.0f);
+    engine.setupCamera(camPos, lookAt, 45.0f);
+
+    std::cout << "Rendering Baseline Z-Buffer..." << std::endl;
+
+    // 4. 执行基准软光栅化与 Z-buffer 测试
+    engine.renderMesh_Baseline(mesh);
+
+    // 5. 输出结果
+    if (engine.exportToImage(outImagePath)) {
+        std::cout << "-> Rendering Complete! Check output at: \n   " << outImagePath << std::endl;
     }
     else {
-        std::cerr << "Failed to load OBJ: " << modelPath << std::endl;
+        std::cerr << "-> Failed to save output image." << std::endl;
     }
 
     return 0;
